@@ -14,6 +14,13 @@ from django.core.urlresolvers import reverse
 
 from django.views import generic
 
+from django.shortcuts import render
+
+#test  shitu
+
+def home_page():
+    
+    pass
 
 def index(request):
     return HttpResponse("Hello, world. You're at the polls index.")

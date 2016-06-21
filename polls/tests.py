@@ -6,6 +6,11 @@ from django.utils import timezone
 
 from .models import Poll
 
+from django.core.urlresolvers import resolve
+
+from .views import home_page
+
+
 class PollMethodTests(TestCase):
 
 	def test_was_published_recently_with_old_question(self):
@@ -32,4 +37,12 @@ class SmokeTest(TestCase):
 
 	def test_bad_maths(self):
 		self.assertEqual(1+2,3)
+
+
+class HomePageTest(TestCase):
+
+	def test_root_url_resolves_to_home_page_view(self):
+		found = resolve('/')
+		self.assertEqual(found.func, home_page)
+
 # Create your tests here.
