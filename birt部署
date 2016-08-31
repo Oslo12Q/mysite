@@ -1,0 +1,56 @@
+Liunx Birt 部署
+
+1.下载jdk
+2.解压 tar -xzf
+3.配置环境变量  vim /etc/profile   在末尾添加配置
+  export JAVA_HOME=/root/user/java/jdk1.8.0_45
+  export CLASSPATH=.:$JAVA_HOME/lib:$JAVA_HOME/jre/lib:$CLASSPATH  
+  export PATH=$JAVA_HOME/bin:$JAVA_HOME/jre/bin:$PATH
+4.终端输入 source /etc/profile   使配置生效
+5.终端输入 java -version
+  显示以下结果表示 jdk配置成功
+  java version "1.8.0_45"
+  Java(TM) SE Runtime Environment (build 1.8.0_45-b14)
+  Java HotSpot(TM) 64-Bit Server VM (build 25.45-b02, mixed mode)
+6.下载 tomcat8  终端输入 wget http://mirrors.tuna.tsinghua.edu.cn/apache/tomcat/tomcat-8/v8.0.36/bin/apache-tomcat-8.0.36.tar.gz
+7.解压 tar -xzf 
+8.配置 tomcat 环境变量  在tomcat主目录下 bin目录
+  vim start.sh
+     在  exec "$PRGDIR"/"$EXECUTABLE" start "$@"  上边加上
+     export JAVA_HOME=/root/user/java/jdk1.8.0_45
+     export CLASSPATH=.:$JAVA_HOME/lib:$JAVA_HOME/jre/lib:$CLASSPATH  
+     export PATH=$JAVA_HOME/bin:$JAVA_HOME/jre/bin:$PATH
+     export TOMCAT_HOME=/root/user/tomcat/apache-tomcat-8.0.36
+  vim shutdown.sh
+     在  exec "$PRGDIR"/"$EXECUTABLE" start "$@"  上边加上
+     export JAVA_HOME=/root/user/java/jdk1.8.0_45
+     export CLASSPATH=.:$JAVA_HOME/lib:$JAVA_HOME/jre/lib:$CLASSPATH  
+     export PATH=$JAVA_HOME/bin:$JAVA_HOME/jre/bin:$PATH
+     export TOMCAT_HOME=/root/user/tomcat/apache-tomcat-8.0.36
+9.启动tomcat  打开tomcat主目录下bin目录    输入  ./startup.sh
+10.在浏览器中输入 Ip：8080   显示tomcat主页   表示tomcat配置成功
+11.查看tomcat 运行日志   打开tomcat主目录下logs目录   终端输入  tail -f catalina.out
+12.下载 birt-runtime
+13.解压  unzip 
+14.打开birt-runtime  找到WebViewerExample 将其复制到tomcat主目录下的webapps目录下，并将其改名birtApp（名字可以不改）
+15.启动Tomcat,在浏览器中输入http://lcoalhost:8080/birtApp/ 在首页中点击"View Example"
+16.把你想要的报表文件 加入到  tomcat/webapps/birtApp 下   
+17.在浏览器 输入 http://0.0.0.0:8080/birtApp/run?_report=/Order.rptdesign&__parameterpage=false&bulk_id=12
+
+Order		 http://218.240.151.113:8080/birtApp/run?__report=Order.rptdesign&__parameterpage=false&bulk_id=18
+	
+Order2           http://218.240.151.113:8080/birtApp/run?__report=Order2.rptdesign&__parameterpage=false&bulk_id=18&business_dispatcher_id=5&_format=xls
+
+Community        http://218.240.151.113:8080/birtApp/run?__report=Community.rptdesign&__parameterpage=false&bulk_id=20__format=xls&__asattachment=true
+	_report  文件路径
+	_parameterpage   是否弹窗 true | false 如果是false 加上 字段 
+	_format  输出报表格式   默认是html 支持：pdf | doc | xls | postscript | ppt
+	__format=xls&__asattachment=true   下载    
+	
+18.如果 缺少 数据mysql 数据连接  添加   到  birtApp 目录下 WEB-INF/lib
+
+*  java.net.BindException: Address already in use
+
+说明端口被占用了 
+解决办法：ps -ef |grep tomcat 查看tomcat 状态
+kill -9   id  杀死他
